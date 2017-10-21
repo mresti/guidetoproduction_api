@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -36,9 +35,9 @@ func stats(w http.ResponseWriter, r *http.Request) {
 func main() {
 	//http.HandleFunc("/favicon.ico", func(_ http.ResponseWriter, _ *http.Request) {})
 	http.HandleFunc("/", count)
-	http.HandleFunc("/stats", stats) 
+	http.HandleFunc("/stats", stats)
 
 	log.Println("Listening at port ", port)
 	log.Panic(
-		http.ListenAndServe(fmt.Sprintf(":%d", port), nil)) 
+		http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }
