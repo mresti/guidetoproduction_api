@@ -10,9 +10,6 @@ matrix:
     - go: master
   fast_finish: true
 Script:
-  - gofmt -w .
-  - go test -v ./...
+  - gofmt -w api.go
+  - go test -v api.go
   - go build api.go
-
-
-
