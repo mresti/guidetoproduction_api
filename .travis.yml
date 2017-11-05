@@ -11,5 +11,5 @@ matrix:
   fast_finish: true
 Script:
   - gofmt -w api.go
-  - go test -v api.go
-  - go build api.go
+  - go test -v -race ./...
+  - make
