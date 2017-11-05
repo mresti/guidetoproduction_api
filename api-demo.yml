@@ -1,27 +1,46 @@
 ---
-host: api
-become: true
-gather_facts: yes
-pre_tasks:
-  - name: API | Building binary API
-    local_action: shell go build api.go
-    become: false 
-tasks:
-  - name: API | Create directory for API bin
-    file:
-      path: /api
-      owner: root
-      group: root
-      mode: 0755
-      state: directory
+- hosts: api
+  become: true
+  gather_facts: yes
+  pre_tasks:
+    - name: API | Building binary API
+      local_action: "shell make {{ go_platform }}"
+      become: false
+  tasks:
+    - name: API | Get running processes
+      shell: "ps -ef | grep -v grep | grep -w demo | awk '{print $2}'"
+      register: running_processes
 
-  - name: API | Stat API binary
-    copy:
-      src: api
-      dest: /api/demo
-      owner: root
-      group: root
-    mode: 0755
+    - name: API | Kill running processes
+      shell: "kill {{ item }}"
+      with_items: "{{ running_processes.stdout_lines }}"
 
-  - name: API | Run API demo
-    command: "/api/demo &"
+    - wait_for:
+        path: "/proc/{{ item }}/status"
+        state: absent
+      with_items: "{{ running_processes.stdout_lines }}"
+      ignore_errors: yes
+      register: killed_processes
+
+    - name: API | Force kill stuck processes
+      shell: "kill -9 {{ item }}"
+      with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"
+
+    - name: API | Create directory for API bin
+      file:
+        path: /api
+        owner: root
+        group: root
+        mode: 0755
+        state: directory
+
+    - name: API | Stat API binary
+      copy:
+        src: "{{ go_bin }}-{{ go_platform }}-{{ go_arch }}"
+        dest: /api/demo
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: API | Run API demo
+      shell: cd api; nohup ./demo &
