@@ -1,0 +1,39 @@
+---
+- hosts: api
+  become: true
+  gather_facts: yes
+  pre_tasks:
+    - name: API | Building binary API
+      local_action: "shell make {{ go_platform }}"
+      become: false
+  tasks:
+    - name: API | Create Unit file
+      template: src=templates/apidemo.service.j2 dest=/lib/systemd/system/apidemo.service mode=644
+      notify:
+        - reload systemctl
+
+    - name: API | Stop service apidemo
+      systemd: name=apidemo state=stopped enabled=yes
+
+    - name: API | Create directory for API bin
+      file:
+        path: /api
+        owner: root
+        group: root
+        mode: 0755
+        state: directory
+
+    - name: API | Copy API binary
+      copy:
+        src: "{{ go_bin }}-{{ go_platform }}-{{ go_arch }}"
+        dest: /api/demo
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: API | Stop service apidemo
+      systemd: name=apidemo state=started enabled=yes
+
+  handlers:
+    - name: reload systemctl
+      command: systemctl daemon-reload

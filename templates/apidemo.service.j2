@@ -1,0 +1,15 @@
+[Unit]
+Description=API Demo
+After=local-fs.target network.target
+After=apidemo.service
+
+[Service]
+ExecStart=/api/demo
+WorkingDirectory=/api
+Type=simple
+StandardError=null
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target
