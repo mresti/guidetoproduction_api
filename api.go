@@ -5,11 +5,22 @@ import (
 	"log"
 	"net/http"
 	"flag"
+	"encoding/json"
 )
 
 var (
 	counter int
 )
+
+
+type VisitAPI struct {
+	Visits int `json:"visits"`
+}
+
+type MessageAPI struct {
+	Message string `json:"message"`
+}
+
 
 func count(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
@@ -17,9 +28,20 @@ func count(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	counter++
+
+	myMessage := MessageAPI{
+		Message: "Hello DevFest Granada 2017",
+	}
+
+	jsonResponse, err := json.Marshal(myMessage)
+	if err != nil{
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
-	w.Write([]byte("{'Message': 'Hello DevFest Granada 2017'}"))
+	w.Write(jsonResponse)
 }
 
 func stats(w http.ResponseWriter, r *http.Request) {
@@ -27,9 +49,19 @@ func stats(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
+	myVisits := VisitAPI{
+		Visits: counter,
+	}
+	jsonResponse, err := json.Marshal(myVisits)
+	if err != nil{
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("{'Visits': %d}", counter)))
+	w.Write(jsonResponse)
 }
 
 func main() {
