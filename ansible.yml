@@ -25,7 +25,7 @@
 
     - name: API | Copy API binary
       copy:
-        src: "{{ go_bin }}-{{ go_platform }}-{{ go_arch }}"
+        src: "bin/{{ go_bin }}_{{ go_platform }}"
         dest: /api/demo
         owner: root
         group: root

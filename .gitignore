@@ -14,9 +14,5 @@
 .glide/
 
 .idea/
-src/
-test/
-api
+bin/
 *.retry
-api-linux-amd64
-api-darwin-amd64
