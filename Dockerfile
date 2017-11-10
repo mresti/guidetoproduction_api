@@ -8,7 +8,7 @@ ENV PORT $API_PORT
 WORKDIR /api
 
 # Copy binary demo
-ADD ./api-linux-amd64 /api/demo
+ADD ./bin/api_linux /api/demo
 
 # Modified files for titan
 RUN chmod 555 /api/demo

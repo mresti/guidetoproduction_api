@@ -1,26 +1,17 @@
 package main
 
 import (
+	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
+	m "models"
 	"net/http"
-	"flag"
-	"encoding/json"
 )
 
 var (
 	counter int
 )
-
-
-type VisitAPI struct {
-	Visits int `json:"visits"`
-}
-
-type MessageAPI struct {
-	Message string `json:"message"`
-}
-
 
 func count(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
@@ -29,12 +20,12 @@ func count(w http.ResponseWriter, r *http.Request) {
 	}
 	counter++
 
-	myMessage := MessageAPI{
+	myMessage := m.MessageAPI{
 		Message: "Hello DevFest Granada 2017",
 	}
 
 	jsonResponse, err := json.Marshal(myMessage)
-	if err != nil{
+	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 	}
@@ -49,11 +40,11 @@ func stats(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
-	myVisits := VisitAPI{
+	myVisits := m.VisitAPI{
 		Visits: counter,
 	}
 	jsonResponse, err := json.Marshal(myVisits)
-	if err != nil{
+	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 		return
