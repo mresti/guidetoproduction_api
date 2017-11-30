@@ -2,7 +2,7 @@ export
 
 # Project specific variables
 PROJECT=api
-GOMAIN=api.go
+GOMAIN=api/main.go
 OS=$(shell uname)
 GOARCH = amd64
 
@@ -25,14 +25,14 @@ compile: darwin linux windows
 
 .PHONY: format
 format:
-	@for gofile in $$(find ./src -name "*.go"); do \
+	@for gofile in $$(find ./src/api -name "*.go"); do \
 		echo "formatting" $$gofile; \
 		gofmt -w $$gofile; \
 	done
 
 .PHONY: test
 test:
-	$(GOCMD) test -v -race ./src/...
+	$(GOCMD) test -v -race ./src/api/...
 
 .PHONY: integrationtest
 integrationtest:
@@ -41,8 +41,8 @@ integrationtest:
 multi: build darwin linux windows
 
 darwin:
-	GOOS=darwin GOARCH=${GOARCH} $(GOBUILD) -o bin/$(PROJECT)_darwin ./src/$(GOMAIN)
+	GOOS=darwin GOARCH=${GOARCH} $(GOBUILD) -o bin/$(PROJECT)_darwin $(PROJECT)
 linux:
-	GOOS=linux GOARCH=${GOARCH} $(GOBUILD) -o bin/$(PROJECT)_linux ./src/$(GOMAIN)
+	GOOS=linux GOARCH=${GOARCH} $(GOBUILD) -o bin/$(PROJECT)_linux $(PROJECT)
 windows:
-	GOOS=windows GOARCH=${GOARCH} $(GOBUILD) -o bin/$(PROJECT)_windows.exe ./src/$(GOMAIN)
+	GOOS=windows GOARCH=${GOARCH} $(GOBUILD) -o bin/$(PROJECT)_windows.exe $(PROJECT)

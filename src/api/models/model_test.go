@@ -1,7 +1,7 @@
 package models
 
 import (
-	"testdata"
+	"api/helpers"
 	"testing"
 )
 
@@ -10,7 +10,7 @@ func TestVisitAPI_marshall(t *testing.T) {
 		Visits: 1,
 	}
 	want := `{"visits":1}`
-	testdata.TestJSONMarshal(t, d, want)
+	helpers.TestJSONMarshal(t, d, want)
 }
 
 func TestMessageAPI_marshall(t *testing.T) {
@@ -18,5 +18,5 @@ func TestMessageAPI_marshall(t *testing.T) {
 		Message: "Hello",
 	}
 	want := `{"message":"Hello"}`
-	testdata.TestJSONMarshal(t, d, want)
+	helpers.TestJSONMarshal(t, d, want)
 }
