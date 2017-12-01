@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"api/app"
 )
 
 func main() {
@@ -14,7 +15,7 @@ func main() {
 	apiPort := string(*portPtr)
 	addr := fmt.Sprintf(":%v", apiPort)
 
-	api := App{}
+	api := app.App{}
 	api.Initialize("", "", "")
 	api.Run(addr)
 }

@@ -8,14 +8,9 @@ matrix:
   allow_failures:
     - go: tip
   fast_finish: true
-before_script:
-  - GO_FILES=$(find . -iname '*.go' -type f | grep -v /vendor/) # All the .go files, excluding vendor/
-  - go get github.com/golang/lint/golint                        # Linter
-  - go get github.com/fzipp/gocyclo                             # Cyclomatic complexities of functions
 
 script:
-  - test -z $(gofmt -s -l $GO_FILES)         # Fail if a .go file hasn't been formatted with gofmt
-  - go vet ./...                             # go vet is the official Go static analyzer
-  - golint -set_exit_status $(go list ./...) # golint as linter
-  - gocyclo -over 15 $GO_FILES               # forbid code with huge functions that 15
+  - go fmt -w ./...
   - go test -v -race ./...                   # Run all the tests with the race detector enabled
+  - make integrationtest
+  - make

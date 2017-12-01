@@ -7,3 +7,7 @@ type VisitAPI struct {
 type MessageAPI struct {
 	Message string `json:"message"`
 }
+
+type NumberAPI struct {
+	Number int `json:"number"`
+}

@@ -20,3 +20,11 @@ func TestMessageAPI_marshall(t *testing.T) {
 	want := `{"message":"Hello"}`
 	helpers.TestJSONMarshal(t, d, want)
 }
+
+func TestNumberAPI_marshall(t *testing.T) {
+	d := &NumberAPI{
+		Number: 1,
+	}
+	want := `{"number":1}`
+	helpers.TestJSONMarshal(t, d, want)
+}

@@ -2,7 +2,7 @@ export
 
 # Project specific variables
 PROJECT=api
-GOMAIN=api/main.go
+VENDOR=./src/vendor
 OS=$(shell uname)
 GOARCH = amd64
 
@@ -32,11 +32,11 @@ format:
 
 .PHONY: test
 test:
-	$(GOCMD) test -v -race ./src/api/...
+	$(GOCMD) test -v -race ./src/$(PROJECT)/...
 
 .PHONY: integrationtest
 integrationtest:
-	$(GOCMD) test -v -tags=integration ./test/...
+	$(GOCMD) test -v -tags=integration ./src/test/...
 
 multi: build darwin linux windows
 

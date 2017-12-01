@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	m "api/models"
@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 var (
@@ -17,17 +18,19 @@ type App struct {
 }
 
 func (a *App) Initialize(user, password, dbname string) {
+	a.Router = mux.NewRouter()
 	a.initializeRoutes()
 }
 
 func (a *App) Run(addr string) {
-	log.Fatal(http.ListenAndServe(addr, nil))
+	log.Fatal(http.ListenAndServe(addr, a.Router))
 }
 
 func (a *App) initializeRoutes() {
-	http.HandleFunc("/favicon.ico", func(_ http.ResponseWriter, _ *http.Request) {})
-	http.HandleFunc("/", a.count)
-	http.HandleFunc("/stats", a.stats)
+	//http.HandleFunc("/favicon.ico", func(_ http.ResponseWriter, _ *http.Request) {})
+	a.Router.HandleFunc("/", a.count)
+	a.Router.HandleFunc("/stats", a.stats)
+	a.Router.HandleFunc("/numbers/{number}", a.getNumbers).Methods(http.MethodGet, http.MethodPost)
 }
 
 func (a *App) count(w http.ResponseWriter, r *http.Request) {
@@ -65,4 +68,19 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)
+}
+
+func (a *App) getNumbers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	number, _ := strconv.Atoi(vars["number"])
+
+	if number > 10 || number < 1 {
+		number = 10
+	}
+
+	myNumber := m.NumberAPI{
+		Number: number,
+	}
+
+	respondWithJSON(w, http.StatusOK, myNumber)
 }
