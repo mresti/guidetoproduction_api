@@ -60,7 +60,7 @@ func TestGetStats(t *testing.T) {
 
 	var v models.VisitAPI
 	json.Unmarshal(response.Body.Bytes(), &v)
-	if v.Visits <= want {
+	if v.Visits > want {
 		t.Errorf("Expected visits to be %v. Got %v", want, v.Visits)
 	}
 }
