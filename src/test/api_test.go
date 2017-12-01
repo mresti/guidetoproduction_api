@@ -52,7 +52,7 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 
 
 func TestGetStats(t *testing.T) {
-	want := 0
+	want := 1
 	req, _ := http.NewRequest("GET", "/stats", nil)
 	response := executeRequest(req)
 
@@ -60,7 +60,7 @@ func TestGetStats(t *testing.T) {
 
 	var v models.VisitAPI
 	json.Unmarshal(response.Body.Bytes(), &v)
-	if v.Visits != want {
+	if v.Visits <= want {
 		t.Errorf("Expected visits to be %v. Got %v", want, v.Visits)
 	}
 }

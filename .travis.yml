@@ -10,7 +10,5 @@ matrix:
   fast_finish: true
 
 script:
-  - go fmt -w ./...
-  - go test -v -race ./...                   # Run all the tests with the race detector enabled
-  - make integrationtest
-  - make
+  - make                 # Run format code, run tests and build code
+  - make integrationtest # Run integration tests
